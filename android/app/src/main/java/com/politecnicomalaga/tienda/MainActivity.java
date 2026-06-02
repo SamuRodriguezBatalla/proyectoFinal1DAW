@@ -31,61 +31,26 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        Controlador.getSingleton(this).listarTodos();
+        Controlador.getSingleton(this).pedirProductos();
+    }
+    public void onClickClientes(View v){
+        Controlador.getSingleton(this).pedirClientes();
     }
 
-
-    //Acciones
-
-    //El botón de añadir producto
-    public void addProduct(View v) {
-        //Revisar los edittext
-        String descripcion = ((EditText)findViewById(R.id.etDescProducto)).getText().toString();
-        String code = ((EditText)findViewById(R.id.etCodProducto)).getText().toString();
-        String stock = ((EditText)findViewById(R.id.etStockProducto)).getText().toString();
-        String precio = ((EditText)findViewById(R.id.etPrecio)).getText().toString();
-
-        //comprobar formato
-
-        Map<String,String> datos = new HashMap<>();
-        datos.put("descripcion",descripcion);
-        datos.put("code",code);
-        datos.put("precio",precio);
-        datos.put("stock",stock);
-
-
-        //añadir el producto al modelo
-        Controlador.getSingleton(this).addProduct(datos);
-        this.reaccionar("");
-
-
-    }
-
-    public void listProduct(View v) {
-        Controlador.getSingleton(this).listarTodos();
+    public void onClickProductos(View v){
+        Controlador.getSingleton(this).pedirProductos();
     }
 
     public void reaccionar(String error) {
+        ListView miListaEnPantalla = findViewById(R.id.listaResultados);
+        ArrayAdapter<String> miAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
 
-        if (error.isEmpty()) {
-            List<Map<String, String>> datos = Controlador.getSingleton(this).getData();
-
-            //Mostrarlos
-            ListView miListaEnPantalla = findViewById(R.id.listaProductos);
-
-            ArrayAdapter<String> miAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
-            for (Map<String, String> unProducto : datos) {
-                String resultado = unProducto.get("d") + " - " + unProducto.get("c") + " - " + unProducto.get("p") + " - " + unProducto.get("s");
-                miAdapter.add(resultado);
-            }
-
-            miListaEnPantalla.setAdapter(miAdapter);
+        if (error.isEmpty()){
+            List<String> datos = Controlador.getSingleton(this).getDatosPantalla();
+            miAdapter.addAll(datos);
         } else {
-            ListView miListaEnPantalla = findViewById(R.id.listaProductos);
-
-            ArrayAdapter<String> miAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
             miAdapter.add(error);
-            miListaEnPantalla.setAdapter(miAdapter);
         }
+        runOnUiThread(() -> miListaEnPantalla.setAdapter(miAdapter));
     }
 }

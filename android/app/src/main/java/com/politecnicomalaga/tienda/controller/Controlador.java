@@ -15,79 +15,76 @@ import java.util.*;
 public class Controlador {
     // instance variables
     private MainActivity miPantalla;
-    private List<Producto> products;
-    
-    //Singleton poner aquí
     private static Controlador singleton;
-    
+
+    public static final int MODO_PRODUCTOS = 1;
+    public static final int MODO_CLIENTES = 2;
+    private int modoActual;
+
+    private List<Producto> listaProductos;
+    private List<Cliente> listaClientes;
+
     private Controlador(MainActivity miPantalla) {
         this.miPantalla = miPantalla;
-        products = new ArrayList<>();
+        this.listaProductos = new ArrayList<>();
+        this.listaClientes = new ArrayList<>();
+        this.modoActual = MODO_PRODUCTOS;
     }
     public static Controlador getSingleton(MainActivity miPantalla) {
         // put your code here
         if (singleton == null) singleton = new Controlador(miPantalla);
         return singleton;
     }
-    public void addProduct(Map<String,String> datos) {
 
-        boolean resultado = true;
-
-        Producto p = new Producto(datos.get("code"),datos.get("descripcion"),Double.parseDouble(datos.get("precio")),Integer.parseInt(datos.get("stock")));
-
-        resultado = products.add(p);
-        if (resultado) {
-            BBDDAccess miBBDD = new BBDDAccess(this);
-            miBBDD.insertarProducto(datos.get("code"), datos.get("descripcion"), Double.parseDouble(datos.get("precio")), Integer.parseInt(datos.get("stock")));
-        }
-    }
-
-    public void listarTodos() {
+    public void pedirProductos(){
+        modoActual = MODO_PRODUCTOS;
         BBDDAccess miBBDD = new BBDDAccess(this);
-        miBBDD.listarTodos();
-
+        miBBDD.peticionGet("http://10.0.2.2:8888/listarProductos");
     }
 
-    public List<Map<String,String>> getData() {
+    public void pedirClientes(){
+        modoActual = MODO_CLIENTES;
+        BBDDAccess miBBDD = new BBDDAccess(this);
+        miBBDD.peticionGet("http://10.0.2.2:8888/listarClientes");
+    }
 
-        List<Map<String,String>> resultado = new ArrayList<>();
+    public List<String> getDatosPantalla() {
 
-        //Cambiar del List<Producto> y List<ProductoPerecedero> a
-        //List de maps
-
-        for(Producto p: products) {
-            Map<String,String> productoMapeado = new HashMap<>();
-            productoMapeado.put("c",p.getCodigo());
-            productoMapeado.put("d",p.getDescripcion());
-            productoMapeado.put("p",""+p.getPrecio());
-            productoMapeado.put("s",""+p.getStock());
-            resultado.add(productoMapeado);
+        List<String> resultado = new ArrayList<>();
+        if (modoActual == MODO_PRODUCTOS){
+            for (Producto p: listaProductos){
+                resultado.add(p.getId_producto()+" - "+p.getDescripcion()+" - "+p.getPrecio_unitario()+"€");
+            }
+        } else if (modoActual == MODO_CLIENTES){
+            for (Cliente c: listaClientes){
+                resultado.add(c.getDni()+" - "+c.getNombre()+" - "+c.getApellidos());
+            }
         }
-
         return resultado;
     }
 
     //Este método es llamado por OKhttp cuando se produce la respuesta a la
     // petición de datos a nuestro backend
     public void setData(String jsonData, boolean error) {
-
+        if (error){
+            miPantalla.reaccionar("Error de conexión con Tomcat.");
+            return;
+        }
         try {
-            JsonParser.parseString(jsonData);
-            //si estamos aquí, es un json
+            Gson gson = new Gson();
+            Type tipoLista;
+            if (modoActual == MODO_PRODUCTOS) {
+                tipoLista = new TypeToken<List<Producto>>(){}.getType();
+                listaProductos = gson.fromJson(jsonData, tipoLista);
+            } else if (modoActual == MODO_CLIENTES) {
+                tipoLista = new TypeToken<List<Cliente>>(){}.getType();
+                listaClientes = gson.fromJson(jsonData, tipoLista);
+            }
+            // Decimos al MainActivity que ya puede pintar la pantalla
+            miPantalla.reaccionar("");
         } catch (JsonSyntaxException e) {
-            error = true; //se que no tengo un json
+            miPantalla.reaccionar("Error al parsear el JSON.");
         }
-
-        if (!error) {
-            products.clear();
-            Type tipoListaProductos = new TypeToken<List<Producto>>() {
-            }.getType();
-            products = (new Gson().fromJson(jsonData, tipoListaProductos));
-            this.miPantalla.reaccionar("");
-        } else {
-            this.miPantalla.reaccionar("Error de acceso a Backend " + jsonData);
-        }
-
     }
 
 }

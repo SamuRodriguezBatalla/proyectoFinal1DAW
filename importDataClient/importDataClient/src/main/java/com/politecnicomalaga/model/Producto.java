@@ -1,4 +1,4 @@
-package com.politecnicomalaga.tienda.model;
+package com.politecnicomalaga.model;
 
 public class Producto {
     private int id_producto;
