@@ -3,10 +3,7 @@ package com.politecnicomalaga.tienda.dataservice;
 import com.politecnicomalaga.tienda.model.*;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class BBDDAccess {
 
@@ -183,5 +180,26 @@ public class BBDDAccess {
             conn.setAutoCommit(true);
             conn.close();
         }
+    }
+
+    public List<Map<String, Object>> listarTodosClientes() throws SQLException, ClassNotFoundException{
+        Connection conn = ConexionBD.getConnection();
+        List<Map<String, Object>> lista = new ArrayList<>();
+
+        String sql = "SELECT dni, nombre, apellidos FROM clientes";
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery(sql);
+
+        while (rs.next()){
+            Map<String, Object> cliente = new HashMap<>();
+            cliente.put("dni", rs.getString("dni"));
+            cliente.put("nombre",rs.getString("nombre"));
+            cliente.put("apellidos", rs.getString("apellidos"));
+            lista.add(cliente);
+        }
+        rs.close();
+        stmt.close();
+        conn.close();
+        return lista;
     }
 }

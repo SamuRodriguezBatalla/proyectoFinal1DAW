@@ -6,4 +6,5 @@ public interface DataAccess {
     public String findClienteXDNI(String dni);
     public String listProductosXPedido(String dni, String pedido);
     public String importData(String jsonDataFromCSV);
+    public String listAllClientes();
 }

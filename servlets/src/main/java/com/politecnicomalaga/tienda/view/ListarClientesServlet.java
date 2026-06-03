@@ -10,19 +10,18 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-@WebServlet ("/listarProductosPedido")
-public class ListarProductosPedidoServlet extends HttpServlet {
+@WebServlet("/listarClientes")
+public class ListarClientesServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
-        String dniStr = request.getParameter("dni");
-        String pedidoStr = request.getParameter("pedido");
-
         Controlador controlador = new Controlador();
-        String json = controlador.listProductosXPedido(dniStr,pedidoStr);
+        String json = controlador.listAllClientes();
 
         PrintWriter out = response.getWriter();
-        out.println(json);    }
+        out.println(json);
+
+    }
 }

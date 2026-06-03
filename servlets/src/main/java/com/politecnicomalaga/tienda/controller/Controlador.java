@@ -17,8 +17,6 @@ public class Controlador implements DataAccess{
 
     @Override
     public String listAllProductos(){
-        BBDDAccess bbdd = new BBDDAccess();
-
         try{
             List<Map<String,Object>> lista = miBBDD.listarTodosProductos();
             return new Gson().toJson(lista);
@@ -70,6 +68,16 @@ public class Controlador implements DataAccess{
         } catch (Exception e) {
             return "{\"resultado\": \"error\"}";
 
+        }
+    }
+
+    @Override
+    public String listAllClientes(){
+        try{
+            List<Map<String, Object>> lista = miBBDD.listarTodosClientes();
+            return new Gson().toJson(lista);
+        } catch (Exception e){
+            return "{\\\"error\\\": \\\"List Clients: \" + e.getMessage() + \"\\\"}";
         }
     }
 
