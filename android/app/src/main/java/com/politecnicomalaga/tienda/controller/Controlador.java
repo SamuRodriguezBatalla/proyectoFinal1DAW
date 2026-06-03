@@ -36,7 +36,11 @@ public class Controlador {
     }
     public static Controlador getSingleton(Reaccionable miPantalla) {
         // put your code here
-        if (singleton == null) singleton = new Controlador(miPantalla);
+        if (singleton == null){
+            singleton = new Controlador(miPantalla);
+        } else if (miPantalla != null) {
+            singleton.setPantalla(miPantalla);
+        }
         return singleton;
     }
 
@@ -95,8 +99,13 @@ public class Controlador {
                 tipoLista = new TypeToken<List<Cliente>>(){}.getType();
                 listaClientes = gson.fromJson(jsonData, tipoLista);
             } else if (modoActual == MODO_BUSCAR_CLIENTE) {
-                tipoLista = new TypeToken<List<Cliente>>(){}.getType();
-                listaClientesBusqueda = gson.fromJson(jsonData, tipoLista);
+                if (jsonData.contains("\"error\"")){
+                    miPantalla.reaccionar("No se han encontrado resultados...");
+                    return;
+                } else {
+                    tipoLista = new TypeToken<List<Cliente>>(){}.getType();
+                    listaClientesBusqueda = gson.fromJson(jsonData, tipoLista);
+                }
             }
             // Decimos al MainActivity que ya puede pintar la pantalla
             miPantalla.reaccionar("");

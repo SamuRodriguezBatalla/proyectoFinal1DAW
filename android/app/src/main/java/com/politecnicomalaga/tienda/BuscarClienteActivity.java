@@ -41,6 +41,9 @@ public class BuscarClienteActivity extends AppCompatActivity implements Reaccion
             Controlador.getSingleton(null).pedirClienteXDNI(dni);
         }
     }
+    public void onClickVolver(View v){
+        finish();
+    }
 
     @Override
     public void reaccionar(String error) {
