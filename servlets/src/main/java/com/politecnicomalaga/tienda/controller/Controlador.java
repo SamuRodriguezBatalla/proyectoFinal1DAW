@@ -39,9 +39,9 @@ public class Controlador implements DataAccess{
     @Override
     public String findClienteXDNI(String dni){
         try {
-            Map<String, Object> cliente = miBBDD.buscarClienteXDNI(dni);
-            if (cliente == null) return "{\"error\": \"Cliente no encontrado\"}";
-            return new Gson().toJson(cliente);
+            List<Map<String, Object>> lista = miBBDD.buscarClienteXDNI(dni);
+            if (lista.isEmpty()) return "{\"error\": \"Cliente no encontrado\"}";
+            return new Gson().toJson(lista);
         } catch (Exception e){
             return "{\"error\": \"Find Client: " + e.getMessage() + "\"}";
         }

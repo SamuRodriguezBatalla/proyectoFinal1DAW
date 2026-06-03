@@ -1,5 +1,6 @@
 package com.politecnicomalaga.tienda;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -18,7 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements Reaccionable{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +40,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void onClickProductos(View v){
         Controlador.getSingleton(this).pedirProductos();
+    }
+    public void onClickBuscarCliente(View v){
+        Intent intent = new Intent(this, BuscarClienteActivity.class);
+        startActivity(intent);
     }
 
     public void reaccionar(String error) {

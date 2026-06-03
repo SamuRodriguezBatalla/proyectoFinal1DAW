@@ -50,25 +50,26 @@ public class BBDDAccess {
     }
 
     // 3 Buscar cliente por DNI
-    public Map<String, Object> buscarClienteXDNI(String dni) throws SQLException, ClassNotFoundException{
+    public List<Map<String, Object>> buscarClienteXDNI(String dni) throws SQLException, ClassNotFoundException{
         Connection conn = ConexionBD.getConnection();
-        Map<String,Object> cliente = null;
+        List<Map<String,Object>> lista = new ArrayList<>();
 
-        String sql = "SELECT dni, nombre, apellidos, email, telefono, direccion from clientes where dni = ?";
+        String sql = "SELECT dni, nombre, apellidos, email, telefono, direccion from clientes where dni LIKE ?";
         PreparedStatement pstmt = conn.prepareStatement(sql);
-        pstmt.setString(1, dni);
+        pstmt.setString(1,"%"+ dni+"%");
         ResultSet rs = pstmt.executeQuery();
-        if (rs.next()){
-            cliente = new HashMap<>();
+        while (rs.next()) {
+            Map<String, Object> cliente = new HashMap<>();
             cliente.put("dni", rs.getString("dni"));
             cliente.put("nombre", rs.getString("nombre"));
             cliente.put("apellidos", rs.getString("apellidos"));
             cliente.put("email", rs.getString("email"));
             cliente.put("telefono", rs.getString("telefono"));
             cliente.put("direccion", rs.getString("direccion"));
+            lista.add(cliente);
         }
         rs.close(); pstmt.close(); conn.close();
-        return cliente;
+        return lista;
     }
 
     // 4 Buscar producto de un pedido concreto de un cliente

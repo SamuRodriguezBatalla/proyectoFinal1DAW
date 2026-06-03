@@ -16,7 +16,7 @@
             android:id="@+id/buListarClientes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="8dp"
             android:text="Clientes"
             android:onClick="onClickClientes"/>
 
@@ -24,8 +24,17 @@
             android:id="@+id/buListarProductos"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
             android:text="Productos"
             android:onClick="onClickProductos"/>
+
+        <Button
+            android:id="@+id/buBuscarCliente"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Buscar Cliente"
+            android:onClick="onClickBuscarCliente"/>
+
     </LinearLayout>
 
     <TextView

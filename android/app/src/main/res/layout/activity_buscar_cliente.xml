@@ -6,39 +6,32 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <LinearLayout
+    <EditText
+        android:id="@+id/editTextDni"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center">
+        android:hint="Introduce DNI o parte del DNI"
+        android:inputType="text"/>
 
-        <Button
-            android:id="@+id/buListarClientes"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:text="Clientes"
-            android:onClick="onClickClientes"/>
-
-        <Button
-            android:id="@+id/buListarProductos"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Productos"
-            android:onClick="onClickProductos"/>
-    </LinearLayout>
+    <Button
+        android:id="@+id/buttonBuscar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Buscar"
+        android:onClick="onClickBuscar"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Resultados de la base de datos:"
+        android:text="Resultados:"
         android:textStyle="bold"/>
 
     <ListView
         android:id="@+id/listaResultados"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="8dp" />
+        android:layout_marginTop="8dp"/>
 
 </LinearLayout>
