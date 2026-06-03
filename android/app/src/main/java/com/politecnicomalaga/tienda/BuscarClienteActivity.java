@@ -38,7 +38,7 @@ public class BuscarClienteActivity extends AppCompatActivity implements Reaccion
         EditText et = findViewById(R.id.editTextDni);
         String dni = et.getText().toString().trim();
         if (!dni.isEmpty()) {
-            Controlador.getSingleton(null).pedirClienteXDNI(dni);
+            Controlador.getSingleton(this).pedirClienteXDNI(dni);
         }
     }
     public void onClickVolver(View v){
